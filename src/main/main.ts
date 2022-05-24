@@ -103,6 +103,18 @@ const createWindow = async () => {
 
   // Open urls in the user's browser
   mainWindow.webContents.setWindowOpenHandler((edata) => {
+    if (edata.url === 'about:blank') {
+      return {
+        action: 'allow',
+        overrideBrowserWindowOptions: {
+          webPreferences: {
+            preload: app.isPackaged
+              ? path.join(__dirname, 'preload.js')
+              : path.join(__dirname, '../../.erb/dll/preload.js'),
+          },
+        },
+      };
+    }
     shell.openExternal(edata.url);
     return { action: 'deny' };
   });
