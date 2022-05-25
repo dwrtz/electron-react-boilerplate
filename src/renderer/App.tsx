@@ -1,41 +1,40 @@
+import * as React from 'react';
+import { Box, Button, Typography } from '@mui/material';
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
-import icon from '../../assets/icon.svg';
 import './App.css';
+import WindowPortal from './WindowPortal';
 
-const Hello = () => {
+const Home = () => {
+  const [isPopoutOpen, setIsPopoutOpen] = React.useState(false);
+  const handleClose = React.useCallback(() => {
+    setIsPopoutOpen(false);
+  }, []);
+
   return (
-    <div>
-      <div className="Hello">
-        <img width="200px" alt="icon" src={icon} />
-      </div>
-      <h1>electron-react-boilerplate</h1>
-      <div className="Hello">
-        <a
-          href="https://electron-react-boilerplate.js.org/"
-          target="_blank"
-          rel="noreferrer"
+    <>
+      <Box>
+        <Typography variant="h1">Home</Typography>
+        <Button variant="contained" onClick={() => setIsPopoutOpen(true)}>
+          Open Popout
+        </Button>
+      </Box>
+      {isPopoutOpen && (
+        <WindowPortal
+          id="popout"
+          title="Hello World"
+          width={400}
+          height={300}
+          onClose={handleClose}
         >
-          <button type="button">
-            <span role="img" aria-label="books">
-              📚
-            </span>
-            Read our docs
-          </button>
-        </a>
-        <a
-          href="https://github.com/sponsors/electron-react-boilerplate"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <button type="button">
-            <span role="img" aria-label="books">
-              🙏
-            </span>
-            Donate
-          </button>
-        </a>
-      </div>
-    </div>
+          <Box>
+            <Typography variant="h1">Popout</Typography>
+            <Button variant="contained" onClick={handleClose}>
+              Close Popout
+            </Button>
+          </Box>
+        </WindowPortal>
+      )}
+    </>
   );
 };
 
@@ -43,7 +42,7 @@ export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Hello />} />
+        <Route path="/" element={<Home />} />
       </Routes>
     </Router>
   );
